@@ -18,8 +18,8 @@ RUN apt update && \
         libatomic1 \
         libnotify4 \
         libappindicator1 \
-        python3
-        python3-pip
+        python3 \
+        python3-pip \
         wget && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
