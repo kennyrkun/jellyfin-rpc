@@ -9,4 +9,4 @@ RUN mkdir -p /app/config
 
 RUN pip install git+https://github.com/kennethsible/jellyfin-rpc.git
 
-CMD ["jellyfin-rpc", "--ini-path", "/app/config"]
+CMD ["jellyfin-rpc", "--ini-path", "/app/config/jellyfin_rpc.ini"]
