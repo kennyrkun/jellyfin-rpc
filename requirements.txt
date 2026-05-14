@@ -1,2 +1,2 @@
 jellyfin-apiclient-python>=1.11.0
-pypresence@git+https://github.com/qwertyquerty/pypresence
+pypresence
