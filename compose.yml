@@ -1,0 +1,47 @@
+services:
+  novnc: # novnc is required because discord requires a display.
+    container_name: novnc
+    image: theasp/novnc:latest
+    environment:
+      # Adjust to your screen size
+      - DISPLAY_WIDTH=1080
+      - DISPLAY_HEIGHT=720
+      - RUN_XTERM=no
+      - RUN_FLUXBOX=no
+    restart: unless-stopped
+    networks:
+      - x11
+  discord:
+    container_name: discord
+    image: ghcr.io/kenneth-sible/jellyfin-rpc:discord
+    volumes:
+      - ./config/discord:/root/.config
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /dev/shm:/dev/shm:z
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/dbus:/var/run/dbus
+      - /var/run/user/1000/bus:/var/run/user/1000/bus
+      - /var/run/user/1000/pulse:/var/run/user/1000/pulse
+      - ./config/tmp:/tmp
+    devices:
+      - /dev/snd
+    environment:
+      DBUS_SESSION_BUS_ADDRESS: unix:path=/var/run/user/1000/bus
+      PULSE_SERVER: unix:/run/user/1000/pulse/native
+      DISPLAY: novnc:0.0
+    networks:
+      - x11
+    restart: unless-stopped
+    depends_on:
+      - novnc
+  jellyfin-rpc:
+    container_name: jellyfin-rpc
+    image: ghcr.io/kenneth-sible/jellyfin-rpc:main
+    volumes:
+      - ./config/jellyfin-rpc:/app/config
+      - ./config/tmp:/tmp
+    restart: unless-stopped
+    depends_on:
+      - discord
+networks:
+  x11: null
